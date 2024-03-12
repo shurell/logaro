@@ -12,7 +12,7 @@
         <a class="navbar-brand" href="#">{{ .Title}}</a>
         <div class="navbar-menu">
           <ul class="navbar-nav">
-            <li class="nav-item">Общий лог</li>
+            <li class="nav-item" onclick='location.href="/";'>Общий лог</li>
             <li class="nav-item">Источники</li>
             <li class="nav-item">Типы сообщений</li>
           </ul>
@@ -26,15 +26,32 @@
       </div>
     </nav>
     <div class="container">
+      <div class="filter-block">
+        <form class="filter-form" action="/" method="get">
+        <select class="nav-item" id="process-filter" name="process-filter">
+          <option value="0">Все</option>
+          {{range .Process}}
+            <option value="{{.Id}}">{{.Tname}}</option>
+          {{end}}
+        </select>
+        <select class="nav-item" id="type-filter" name="type-filter">
+          <option value="0">Все</option>
+          {{range .MessTypes}}
+            <option value="{{.Id}}">{{.Tname}}</option>
+          {{end}}
+        </select>
+        <button class="nav-item" type="submit">Применить фильтр</button>
+      </form>
+      </div>
       <table class="table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Процесс</th>
-            <th>Тип</th>
-            <th>Дата[сервер]</th>
-            <th>Дата[хост]</th>
-            <th>Сообщение</th>
+            <th class="tabhead">#</th>
+            <th class="tabhead">Процесс</th>
+            <th class="tabhead">Тип</th>
+            <th class="tabhead">Дата[сервер]</th>
+            <th class="tabhead">Дата[хост]</th>
+            <th class="tabhead">Сообщение</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +59,7 @@
           <tr>
             <td>{{ .Id }}</td>
             <td>{{ .LogOwner }}</td>
-            <td style="color: #{{ .MessageColor }};">{{ .MessageType }}</td>
+            <td style='color: #{{ .MessageColor }};'>{{ .MessageType }}</td>
             <td>{{ .Utime }}</td>
             <td>{{ .Source_utime }}</td>
             <td>{{ .Message }}</td>
