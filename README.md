@@ -1,0 +1,2 @@
+# logaro
+simple log service
