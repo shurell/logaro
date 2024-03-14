@@ -23,11 +23,11 @@
         </div>
     </div>
     <div class="modal nodisplay" id="types">
-      <div style="display: flex; align-items: center; justify-content: space-between;"><h3>Зарегистрированные программы-источники</h3><button class="nav-item" onclick="this.parentNode.parentNode.classList.toggle('nodisplay');">Закрыть</button></div>
+      <div style="display: flex; align-items: center; justify-content: space-between;"><h3>Зарегистрированные типы сообщений</h3><button class="nav-item" onclick="this.parentNode.parentNode.classList.toggle('nodisplay');">Закрыть</button></div>
         <div class="modalsc">
         <ul>
         {{range .MessTypes}}
-            <li>{{.Tname}} [{{.Hexcolor}}] <button onclick="removeType(this, {{.Id}}, '{{.Tname}}');">удалить</button></li>
+            <li>({{.Id}}) {{.Tname}} [{{.Hexcolor}}] <button onclick="removeType(this, {{.Id}}, '{{.Tname}}');">удалить</button></li>
           {{end}}
         </ul>
       </div>

@@ -26,6 +26,13 @@ type messReadable struct {
 	Message      string
 }
 
+type messIn struct {
+	LogOwnerToken string `json:"log_owner_token"`
+	MessageType   int    `json:"message_type"`
+	SourceUtime   int64  `json:"source_utime"`
+	Message       string `json:"message"`
+}
+
 type messageTypes struct {
 	Id       int    `json:"id"`
 	Tname    string `json:"tname"`
