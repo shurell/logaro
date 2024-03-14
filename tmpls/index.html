@@ -7,20 +7,50 @@
     <link media="all" rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="modal nodisplay" id="sources">
+        <div style="display: flex; align-items: center; justify-content: space-between;"><h3>Зарегистрированные программы-источники</h3><button class="nav-item" onclick="this.parentNode.parentNode.classList.toggle('nodisplay');">Закрыть</button></div>
+        <div class="modalsc">
+        <ul>
+        {{range .Process}}
+            <li>{{.Tname}} [{{.Apitoken}}] <button onclick="removeProg(this, {{.Id}}, '{{.Apitoken}}');">удалить</button></li>
+          {{end}}
+        </ul>
+      </div>
+        <div style="display: flex;">
+          <input class="search-input" type="text" placeholder="Название программы" id="sname">
+          <input class="search-input" type="text" placeholder="Токен для программы" id="stoken">
+          <button class="nav-item" onclick="addProg();">Добавить</button>
+        </div>
+    </div>
+    <div class="modal nodisplay" id="types">
+      <div style="display: flex; align-items: center; justify-content: space-between;"><h3>Зарегистрированные программы-источники</h3><button class="nav-item" onclick="this.parentNode.parentNode.classList.toggle('nodisplay');">Закрыть</button></div>
+        <div class="modalsc">
+        <ul>
+        {{range .MessTypes}}
+            <li>{{.Tname}} [{{.Hexcolor}}] <button onclick="removeType(this, {{.Id}}, '{{.Tname}}');">удалить</button></li>
+          {{end}}
+        </ul>
+      </div>
+        <div style="display: flex;">
+          <input class="search-input" type="text" placeholder="Название типа сообщения" id="tname">
+          <input class="search-input" type="text" placeholder="Цвет (hex)" id="ttoken">
+          <button class="nav-item" onclick="addType();">Добавить</button>
+        </div>
+    </div>
     <nav class="navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">{{ .Title}}</a>
+        <a class="navbar-logo" href="#">{{ .Title}}</a>
         <div class="navbar-menu">
           <ul class="navbar-nav">
             <li class="nav-item" onclick='location.href="/";'>Общий лог</li>
-            <li class="nav-item">Источники</li>
-            <li class="nav-item">Типы сообщений</li>
+            <li class="nav-item" onclick="sources.classList.toggle('nodisplay');">Зарегистрированные источники</li>
+            <li class="nav-item" onclick="types.classList.toggle('nodisplay');">Типы сообщений</li>
           </ul>
-          <form class="formsearch">
-            <input class="search-input"
+          <form class="formsearch" action="/search" method="post">
+            <input id="sval" name="sval" class="search-input"
               type="search"
               placeholder="Поиск по сообщениям"/>
-            <button class="nav-item btn-sub">Поиск</button>
+            <button type="submit" class="nav-item btn-sub">Поиск</button>
           </form>
         </div>
       </div>
@@ -40,9 +70,16 @@
             <option value="{{.Id}}">{{.Tname}}</option>
           {{end}}
         </select>
+        
+          <div class="nav-item lilim">
+            <input type="checkbox" id="limits" name="limits" checked />
+            <label for="scales">Показывать последние 500 строк</label>
+          </div>
+  
         <button class="nav-item" type="submit">Применить фильтр</button>
       </form>
       </div>
+      <span>{{.SearchValue}}</span>
       <table class="table">
         <thead>
           <tr>
@@ -69,4 +106,5 @@
       </table>
     </div>
   </body>
+  <script src="j.js"></script>
 </html>
