@@ -4,17 +4,8 @@ import "database/sql"
 
 var DB *sql.DB
 
-var LogOwnersGlobal []logOwners
-var MessTypesGlobal []messageTypes
-
-type mess struct {
-	id           int
-	logOwner     int
-	messageType  int
-	utime        int64
-	source_utime int64
-	message      string
-}
+var LOhash map[string]logOwners
+var MThash map[string]messageTypes
 
 type messReadable struct {
 	Id           int

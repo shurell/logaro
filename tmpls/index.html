@@ -95,8 +95,8 @@
           {{range .DataStrings}}
           <tr>
             <td>{{ .Id }}</td>
-            <td>{{ .LogOwner }}</td>
-            <td style='color: #{{ .MessageColor }};'>{{ .MessageType }}</td>
+            <td title="{{ if eq .LogOwner "--*" }}Источник, отсутствующий в справочнике{{ end }}">{{ .LogOwner }}</td>
+            <td title="{{ if eq .MessageType "--*" }}Тип сообщения, отсутствующий в справочнике{{ end }}" style='color: #{{ .MessageColor }};'>{{ .MessageType }}</td>
             <td>{{ .Utime }}</td>
             <td>{{ .Source_utime }}</td>
             <td>{{ .Message }}</td>
@@ -104,6 +104,7 @@
           {{end}}
         </tbody>
       </table>
+      <p>--* - незарегистрированный вид</p>
     </div>
   </body>
   <script src="j.js"></script>
