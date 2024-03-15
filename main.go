@@ -46,14 +46,17 @@ func main() {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	http.ServeFile(w, r, "tmpls/favicon.ico")
 }
 
 func jsHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	http.ServeFile(w, r, "tmpls/j.js")
 }
 
 func cssHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	http.ServeFile(w, r, "tmpls/styles.css")
 }
 
