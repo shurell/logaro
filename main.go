@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"encoding/gob"
 	"encoding/json"
-	"io"
+	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"strconv"
 	"text/template"
@@ -22,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer DB.Close()
-
+	go serve("9999") // binary log
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", showMain)
 	mux.HandleFunc("GET /favicon.ico", faviconHandler)
@@ -93,41 +95,39 @@ func showMainSearches(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, data)
 }
 
-func storeMessage(w http.ResponseWriter, r *http.Request) {
-	var result messIn
-	body, err := io.ReadAll(r.Body)
+func serve(p string) {
+	ln, err := net.Listen("tcp", ":"+p)
 	if err != nil {
-		log.Println(terr+":", err)
-	}
-	err = json.Unmarshal(body, &result)
-	if err != nil {
-		log.Println(terror02)
-	}
-	//Простая проверка
-	if result.LogOwnerToken == "" || result.Message == "" || result.MessageType == 0 || result.SourceUtime == 0 {
-		w.Write([]byte(terror01))
+		fmt.Println(err)
 		return
 	}
-	if storeMS(result.LogOwnerToken, result.MessageType, result.SourceUtime, result.Message) {
-		log.Println(tnotice01, result.Message)
-		w.Write([]byte("ok"))
-	} else {
-		w.Write([]byte(terr))
+	for {
+		c, err := ln.Accept()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		go handleServerConnection(c)
 	}
 }
 
-func storeMS(LogOwnerToken string, MessageType int, SourceUtime int64, Message string) bool {
-	result := false
-	loId := LOhash[LogOwnerToken].Id
-	if loId > 0 && MessageType != 0 && Message != "" {
-		_, err := DB.Exec("insert into log_messages(log_owner, message_type, utime, source_utime, message) values(?, ?, ?, ?, ?)", loId, MessageType, time.Now().Unix(), SourceUtime, Message)
-		if err != nil {
-			log.Println(err)
-		} else {
-			result = true
-		}
+func handleServerConnection(c net.Conn) {
+	var jmsg string
+	var m messIn
+	err := gob.NewDecoder(c).Decode(&jmsg)
+	if err != nil {
+		log.Println(terror03)
 	}
-	return result
+	err = json.Unmarshal([]byte(jmsg), &m)
+	if err != nil {
+		log.Println(terror02)
+	}
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("принято:", m)
+	}
+	c.Close()
 }
 
 func syncMessages(filterLO, filterMT, limit, limitPos int) []messReadable {

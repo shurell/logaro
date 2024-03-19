@@ -63,6 +63,7 @@ func removeLO(w http.ResponseWriter, r *http.Request) {
 	if result.Id != 0 && result.Apitoken != "" {
 		_, err := DB.Exec("delete from log_owners where id=? and apitoken=?", result.Id, result.Apitoken)
 		if err != nil {
+			log.Println(tnotice03, result.Id, result.Tname)
 			delete(LOhash, result.Apitoken)
 			w.Write([]byte("ok"))
 		}
